@@ -22,13 +22,13 @@ return new class extends Migration
             $table->unsignedInteger('price')->default(0);
 
             $table->foreignIdFor(Brand::class)
+                ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->timestamps();
         });
-
 
         Schema::create('category_product', function (Blueprint $table) {
             $table->id();
