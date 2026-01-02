@@ -35,13 +35,11 @@ class AppServiceProvider extends ServiceProvider
             DB::listen(function ($query) {
                 if($query->time > 100)
                 {
-                    logger()->channel('telegram')->debug('whenQueryingForLongerThan:' . $query->query()->sql, $query->bindings);
+                    logger()->channel('telegram')->debug('query longer than 1ms:' . $query->query()->sql, $query->bindings);
                 }
             });
 
-            $kernel = app(Kernel::class);
-
-            $kernel->whenRequestLifecycleIsLongerThan(
+            app(Kernel::class)->whenRequestLifecycleIsLongerThan(
                 CarbonInterval::seconds(4),
                 function () {
                     logger()->channel('telegram')->debug('whenRequestLifecycleIsLongerThan:' . request()->url());
