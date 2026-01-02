@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasSlug;
 use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,21 +12,11 @@ class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
     use HasFactory;
+    use HasSlug;
 
     protected $fillable = [
         'title'
     ];
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function (Category $category) {
-            $category->slug = $category->slug ?? str($category->title)->slug();
-        });
-    }
-
-
 
     public function products(): BelongsToMany
     {
