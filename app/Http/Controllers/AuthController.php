@@ -83,9 +83,12 @@ class AuthController extends Controller
             $request->only('email')
         );
 
-        return $status === Password::ResetLinkSent
-            ? back()->with(['message' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        if($status != Password::RESET_LINK_SENT) {
+            flash()->info(__($status));
+
+            return back();
+        }
+        return back()->withErrors(['email' => __($status)]);
     }
 
     public function reset(string $token): Factory|View|\Illuminate\View\View
@@ -108,9 +111,12 @@ class AuthController extends Controller
             }
         );
 
-        return $status === Password::PasswordReset
-            ? redirect()->route('login')->with('message', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        if($status != Password::PasswordReset) {
+            flash()->info(__($status));
+
+            return redirect()->route('login');
+        }
+        return back()->withErrors(['email' => __($status)]);
     }
 
     public function github(): RedirectResponse
